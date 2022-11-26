@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none;"> 🔌&nbsp;&nbsp;Delfino Demo Plugin&nbsp;&nbsp; 🔌</h1>
-<h3 align="center">A minimal plugin example for [Delfino](https://github.com/radeklat/delfino).</h3>
+<h3 align="center">A minimal plugin example for <a href="https://github.com/radeklat/delfino">Delfino</a>.</h3>
 
 <p align="center">
     <a href="https://app.circleci.com/pipelines/github/radeklat/delfino-demo?branch=main">
