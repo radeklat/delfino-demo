@@ -3,16 +3,18 @@ version: 2.1
 orbs:
   gh: circleci/github-cli@1.0.4
 
+constants:
+  - &project_name "delfino-demo"
+  - &minimum_python_version "3.7"
+  - &supported_python_versions [ *minimum_python_version, "3.8", "3.9", "3.10", "3.11" ]
+
 parameters:
   project_name:
     type: string
-    default: delfino-demo
-  working_directory:
+    default: *project_name
+  minimum_python_version:
     type: string
-    default: ~/delfino-demo
-  python_version:
-    type: string
-    default: "3.7"
+    default: *minimum_python_version
   cache_version:
     type: string
     default: "2"
@@ -34,7 +36,7 @@ jobs: # A basic unit of work in a run
       - image: cimg/python:<< parameters.python_version >>
         environment:
           PIPENV_VENV_IN_PROJECT: "true"
-    working_directory: << pipeline.parameters.working_directory >>
+    working_directory: ~/<< pipeline.parameters.project_name >>
     steps:
       - checkout
       - restore_cache:
@@ -76,31 +78,31 @@ jobs: # A basic unit of work in a run
           path: reports
 
   build:
-    working_directory: << pipeline.parameters.working_directory >>
+    working_directory: ~/<< pipeline.parameters.project_name >>
     docker: # run the steps with Docker
-      - image: cimg/python:<< pipeline.parameters.python_version >>
+      - image: cimg/python:<< pipeline.parameters.minimum_python_version >>
         environment:
           PIPENV_VENV_IN_PROJECT: "true"
     steps:
       - checkout
       - restore_cache:
-          key: << pipeline.parameters.cache_version >>-<< pipeline.parameters.project_name >>-<< pipeline.parameters.python_version >>-{{ checksum "poetry.lock" }}
+          key: << pipeline.parameters.cache_version >>-<< pipeline.parameters.project_name >>-<< pipeline.parameters.minimum_python_version >>-{{ checksum "poetry.lock" }}
       - run:
           name: Build library
           command: |
             poetry build
       - persist_to_workspace:
-          root: << pipeline.parameters.working_directory >>
+          root: ~/<< pipeline.parameters.project_name >>
           paths:
             - .
 
   publish:
-    working_directory: << pipeline.parameters.working_directory >>
+    working_directory: ~/<< pipeline.parameters.project_name >>
     docker: # run the steps with Docker
-      - image: cimg/python:<< pipeline.parameters.python_version >>
+      - image: cimg/python:<< pipeline.parameters.minimum_python_version >>
     steps:
       - attach_workspace:
-          at: << pipeline.parameters.working_directory >>
+          at: ~/<< pipeline.parameters.project_name >>
       - run:
           name: Upload to pypi
           command: |
@@ -117,13 +119,13 @@ jobs: # A basic unit of work in a run
             fi
 
   release:
-    working_directory: << pipeline.parameters.working_directory >>
+    working_directory: ~/<< pipeline.parameters.project_name >>
     docker:
-      - image: cimg/python:<< pipeline.parameters.python_version >>
+      - image: cimg/python:<< pipeline.parameters.minimum_python_version >>
     steps:
       - checkout
       - restore_cache:
-          key: << pipeline.parameters.cache_version >>-<< pipeline.parameters.project_name >>-<< pipeline.parameters.python_version >>-{{ checksum "poetry.lock" }}
+          key: << pipeline.parameters.cache_version >>-<< pipeline.parameters.project_name >>-<< pipeline.parameters.minimum_python_version >>-{{ checksum "poetry.lock" }}
       - gh/setup
       - run:
           name: Check if current version has been released
@@ -146,7 +148,7 @@ workflows:
           context: << pipeline.parameters.project_name >>
           matrix:
             parameters:
-              python_version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
+              python_version: *supported_python_versions
       - build:
           name: Build
           requires:
