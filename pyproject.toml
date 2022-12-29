@@ -1,6 +1,6 @@
 [tool.poetry]
 name="delfino-demo"
-version="1.0.0"
+version="1.0.1"
 authors = ["Radek Lát <radek.lat@gmail.com>"]
 description="Delfino demo plugin"
 license = "MIT License"
@@ -24,8 +24,8 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
-delfino = {extras = ["verify-all"], version = "^0.20.3"}
+python = ">=3.7.2,<=3.11"
+delfino = "1.0"
 
 # https://python-poetry.org/docs/pyproject/#plugins
 [tool.poetry.plugins]
@@ -35,8 +35,8 @@ delfino = {extras = ["verify-all"], version = "^0.20.3"}
 
 
 [tool.poetry.group.dev.dependencies]
+delfino-core = {extras = ["verify-all", "dependencies-update"], version = "^4.0"}
 types-toml = "^0.10.8.1"
-psutil = "^5.9.4"
 
 [tool.isort]
 # Setting compatible with black. See https://black.readthedocs.io/en/stable/compatible_configs.html
@@ -92,7 +92,7 @@ follow_imports = "silent"
 [[tool.mypy.overrides]]
 # Source code dependencies
 module = [
-    "delfino.*"
+    "delfino.*",
 ]
 ignore_missing_imports = true
 
@@ -107,3 +107,5 @@ add-ignore = [
     "D401",  # "First line should be in imperative mood"
     "D413",  # "Missing blank line after last section"
 ]
+
+[tool.delfino.plugins.delfino-core]

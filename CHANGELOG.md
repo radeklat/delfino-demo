@@ -12,11 +12,18 @@ Types of changes are:
 
 ## [Unreleased]
 
+## [1.0.1] - 2022-12-29
+
+### Features
+
+- Dependencies update
+
 ## [1.0.0] - 2022-11-26
 
 ### Features
 
 - Initial source code
 
-[Unreleased]: https://github.com/radeklat/settings-doc/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/radeklat/settings-doc/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/radeklat/settings-doc/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/radeklat/settings-doc/compare/initial...1.0.0
